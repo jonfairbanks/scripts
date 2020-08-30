@@ -17,4 +17,4 @@ do
   echo "Cleaned up pulled images for: $1/$i\n"
 done
 
-echo "[OK] All Docker images have been pulled for $1"
+echo "[OK] All Docker images have been pulled for $1\n"
