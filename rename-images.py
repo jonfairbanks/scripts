@@ -5,44 +5,69 @@
 # Usage: `python3 rename_images.py`
   
 import os, sys
-from colorama import Fore, Style
-  
+import readline
+import time
+
+readline.parse_and_bind("tab: complete")
+
 def main():
-    indir = input("Directory to Rename: ")
-    outdir = input("Output Directory: ")
+    temp = os.system("clear")
+    cwd = os.getcwd()
+    indir = input("Directory to Rename (" + cwd + "): ")
+    outdir = input("Output Directory (" + cwd + "): ")
+    name = input("What should these images be named? (auto): ")
 
     if (indir == ""):
-        print(Fore.RED + "A valid input directory is required...")
-        print(Style.RESET_ALL) 
-        indir = input("Directory to Rename: ")
+        indir = cwd
 
     if (outdir == ""):
-        print(Fore.RED + "A valid output directory is required...")
-        print(Style.RESET_ALL) 
-        outdir = input("Output Directory: ")
+        outdir = cwd
 
+    temp = os.system("clear")
     print("Input Directory: " + indir)
     print("Output Directory: " + outdir)
+    if (name == ""):
+        print("\n** Images will be sequentially renamed **")
+    else:
+        print("Image Names: " + name + "-x.ext")
 
-    if not input("\nAre you sure you want to rename images? (y/n): ").lower().strip()[:1] == "y": sys.exit(1)
+    filecount = sum(len(files) for _, _, files in os.walk(indir))
+    if not input("\nAre you sure you want to rename " + str(filecount) + " images? (y/n): ").lower().strip()[:1] == "y": sys.exit(1)
 
     i = 1
 
     try:
         os.makedirs(outdir)
     except FileExistsError:
-        # directory already exists
+        # directory exists
         pass
       
     for filename in os.listdir(indir):
-        dst = str(i) + '.jpg'
+        dst = None
+        if (name == ""):
+            dst = str(i) + os.path.splitext(filename)[1]
+        else:
+            dst = name + '-' + str(i) + os.path.splitext(filename)[1]
         src = indir + '/' + filename
         dst = outdir + '/' + dst
 
-        print("Renaming: " + src + " --> " + dst)
+        # print("Renaming: " + src + " --> " + dst)
 
-        os.rename(src, dst)
+        try:
+            os.rename(src, dst)
+        except:
+            print("File Error: " + src)
         i += 1
+
+    time.sleep(2) # artifical sleep, otherwise it feels like nothing happened
+    print("\nProcessing Complete!\n")
   
-if __name__ == '__main__': 
-    main()
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n")
+        try:
+            sys.exit(0)
+        except SystemExit:
+            os._exit(0)
