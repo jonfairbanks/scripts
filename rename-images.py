@@ -55,9 +55,9 @@ def main():
 
         try:
             os.rename(src, dst)
+            i += 1
         except:
             print("File Error: " + src)
-        i += 1
 
     time.sleep(2) # artifical sleep, otherwise it feels like nothing happened
     print("\nProcessing Complete!\n")
