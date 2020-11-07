@@ -19,17 +19,17 @@ client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 def get_sys_info(ip, cmd):     
     global client
     try:
-        print(f"Connecting to " + str(ip).rstrip() + "...")
+        print(f"[" + str(ip).rstrip() + "]")
         client.connect(ip, username=args.username, password=args.password, timeout=3)
 
         stdin, stdout, stderr = client.exec_command(cmd)
 
         for line in stdout:
-            print("Output: " + line)
+            print("Output:", line)
 
         client.close()
     except Exception as e:
-        print("Error: ", e, end="\n\n")
+        print("Error:", e, end="\n\n")
         pass
 
 def main():
@@ -40,9 +40,9 @@ def main():
         sys.exit(0)
 
     if args.file:
-        file = open(args.file, 'r') 
+        hosts = open(args.file, 'r') 
     else:
-        file = open('hosts.txt', 'r') 
+        hosts = open('hosts.txt', 'r')
 
     if args.cmd:
         cmd = args.cmd
@@ -50,18 +50,21 @@ def main():
         cmd = "uptime | awk -F'( |,|:)+' '{print $6,$7\",\",$8,\"hours,\",$9,\"minutes.\"}'"
 
     count = 0
+
     while True: 
         count += 1
-        ip = file.readline()
-        if not ip: 
+        host = hosts.readline()
+        if not host: 
             break
-        get_sys_info(ip, cmd)
+        get_sys_info(host, cmd)
     
-    file.close() 
+    hosts.close() 
 
 if __name__ == '__main__':
     try:
+        print("** Gathering system information... **\n")
         main()
+        print("FINISHED\n")
     except KeyboardInterrupt:
         try:
             sys.exit(0)
