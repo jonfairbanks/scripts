@@ -1,6 +1,9 @@
 import argparse
+import csv
+import datetime
 import os
 import paramiko
+import socket
 import sys
 
 __version__ = "1.0.0"
@@ -16,21 +19,41 @@ args = parser.parse_args()
 client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
+data = {}
+
 def get_sys_info(ip, cmd):     
     global client
     try:
-        print(f"[" + str(ip).rstrip() + "]")
+        print(f"[" + str(ip) + "]")
         client.connect(ip, username=args.username, password=args.password, timeout=3)
 
         stdin, stdout, stderr = client.exec_command(cmd)
 
-        for line in stdout:
-            print("Output:", line)
+        if stdout is not None: 
+            for line in stdout:
+                print("Output:", line)
+                return line.rstrip()
 
         client.close()
     except Exception as e:
         print("Error:", e, end="\n\n")
+        return "Error: " + str(e)
         pass
+
+def save_csv(data):
+    headers = ['Hostname', 'IP Address', 'Timestamp (PT)', 'Command', 'Output']
+
+    if os.path.isfile('output.csv'):
+        with open('output.csv', 'a', encoding="utf-8") as outfile:
+            writer = csv.writer(outfile)
+            for key, value in data.items():
+                writer.writerow([key, value])
+    else:
+        with open('output.csv', 'w', encoding="utf-8") as outfile:
+            writer = csv.writer(outfile)
+            writer.writerow(headers)
+            for key, value in data.items():
+                writer.writerow([key, value])
 
 def main():
     """main func."""
@@ -53,17 +76,26 @@ def main():
 
     while True: 
         count += 1
-        host = hosts.readline()
+        host = hosts.readline().rstrip()
         if not host: 
             break
-        get_sys_info(host, cmd)
-    
+
+        out = get_sys_info(host, cmd)
+
+        data[str(host)] = {}
+        data[str(host)]['ip'] = socket.gethostbyname(host)
+        data[str(host)]['timestamp'] = str(datetime.datetime.now())
+        data[str(host)]['cmd'] = cmd
+        data[str(host)]['output'] = out
+
     hosts.close() 
 
 if __name__ == '__main__':
     try:
         print("** Gathering system information... **\n")
         main()
+        print(data, end="\n\n")
+        save_csv(data)
         print("FINISHED\n")
     except KeyboardInterrupt:
         try:
