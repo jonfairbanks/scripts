@@ -14,6 +14,7 @@ parser.add_argument("-u", "--username", help="SSH username to use for remote con
 parser.add_argument("-p", "--password", help="SSH password to use for remote connections", type=str, required=True)
 parser.add_argument("-c", "--cmd", help="Command to run on remote hosts", type=str)
 parser.add_argument("-v", "--version", help="current SysInfo version.", action="store_true")
+parser.add_argument("--debug", help="Increase output verbosity", action="store_true")
 args = parser.parse_args()
 
 client = paramiko.SSHClient()
@@ -41,19 +42,18 @@ def get_sys_info(ip, cmd):
         pass
 
 def save_csv(data):
-    headers = ['Hostname', 'IP Address', 'Timestamp (PT)', 'Command', 'Output']
+    f = open("output.csv", "w")
+    f.write("Hostname,IP Address,Timestamp (PT),Command,Output\n")
 
-    if os.path.isfile('output.csv'):
-        with open('output.csv', 'a', encoding="utf-8") as outfile:
-            writer = csv.writer(outfile)
-            for key, value in data.items():
-                writer.writerow([key, value])
-    else:
-        with open('output.csv', 'w', encoding="utf-8") as outfile:
-            writer = csv.writer(outfile)
-            writer.writerow(headers)
-            for key, value in data.items():
-                writer.writerow([key, value])
+    for keys in data:
+        f.write(keys + ",")
+        KEYS = data[keys]
+        for values in KEYS:
+            if args.debug:
+                print(KEYS[values])
+            f.write(str(KEYS[values]) + ",")
+        f.write("\n")
+    f.close()
 
 def main():
     """main func."""
@@ -61,6 +61,9 @@ def main():
     if args.version:
         print(f"Current Version: {__version__}\n")
         sys.exit(0)
+
+    if args.debug:
+        print("** Debug Mode: ON **\n")
 
     if args.file:
         hosts = open(args.file, 'r') 
@@ -92,9 +95,9 @@ def main():
 
 if __name__ == '__main__':
     try:
-        print("** Gathering system information... **\n")
+        print("STARTING\n")
         main()
-        print(data, end="\n\n")
+        #print(data, end="\n\n")
         save_csv(data)
         print("FINISHED\n")
     except KeyboardInterrupt:
