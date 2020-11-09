@@ -73,7 +73,7 @@ def main():
     if args.cmd:
         cmd = args.cmd
     else:
-        cmd = "uptime | awk -F'( |,|:)+' '{print $6,$7\",\",$8,\"hours,\",$9,\"minutes.\"}'"
+        cmd = "uname -a"
 
     count = 0
 
