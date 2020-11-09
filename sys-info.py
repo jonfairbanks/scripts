@@ -73,7 +73,7 @@ def main():
     if args.cmd:
         cmd = args.cmd
     else:
-        cmd = "uname -a"
+        cmd = "( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1"
 
     count = 0
 
