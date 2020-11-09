@@ -2,6 +2,7 @@ import argparse
 import csv
 import datetime
 import getpass
+import logging
 import os
 import paramiko
 import socket
@@ -29,7 +30,7 @@ def get_sys_info(ip, cmd):
     global client, username, password
     try:
         print(f"[" + str(ip) + "]")
-        client.connect(ip, username=username, password=password, timeout=3)
+        client.connect(ip, username=username, password=password, timeout=10, banner_timeout=200)
 
         stdin, stdout, stderr = client.exec_command(cmd)
 
@@ -59,6 +60,8 @@ def save_csv(data):
     f.close()
 
 def main():
+    global username, password
+
     """main func."""
 
     if args.version:
@@ -67,6 +70,8 @@ def main():
 
     if args.debug:
         print("** Debug Mode: ON **\n")
+        logging.basicConfig()
+        logging.getLogger("paramiko").setLevel(logging.DEBUG)
 
     if args.file:
         hosts = open(args.file, 'r') 
