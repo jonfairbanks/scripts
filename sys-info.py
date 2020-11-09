@@ -1,6 +1,7 @@
 import argparse
 import csv
 import datetime
+import getpass
 import os
 import paramiko
 import socket
@@ -10,8 +11,8 @@ __version__ = "1.0.0"
 
 parser = argparse.ArgumentParser(description='Get SysInfo for Remote Systems')
 parser.add_argument("-f", "--file", help="Input file for bulk IPs", type=str)
-parser.add_argument("-u", "--username", help="SSH username to use for remote connections", type=str, required=True)
-parser.add_argument("-p", "--password", help="SSH password to use for remote connections", type=str, required=True)
+parser.add_argument("-u", "--username", help="SSH username to use for remote connections", type=str)
+parser.add_argument("-p", "--password", help="SSH password to use for remote connections", type=str)
 parser.add_argument("-c", "--cmd", help="Command to run on remote hosts", type=str)
 parser.add_argument("-v", "--version", help="current SysInfo version.", action="store_true")
 parser.add_argument("--debug", help="Increase output verbosity", action="store_true")
@@ -21,12 +22,14 @@ client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
 data = {}
+username = None
+password = None
 
 def get_sys_info(ip, cmd):     
-    global client
+    global client, username, password
     try:
         print(f"[" + str(ip) + "]")
-        client.connect(ip, username=args.username, password=args.password, timeout=3)
+        client.connect(ip, username=username, password=password, timeout=3)
 
         stdin, stdout, stderr = client.exec_command(cmd)
 
@@ -69,6 +72,17 @@ def main():
         hosts = open(args.file, 'r') 
     else:
         hosts = open('hosts.txt', 'r')
+
+    if not args.username:
+        username = input("Username: ")
+    else:
+        username = args.username
+
+    if not args.password:
+        password = getpass.getpass()
+        print("\n")
+    else:
+        password = args.password
 
     if args.cmd:
         cmd = args.cmd
