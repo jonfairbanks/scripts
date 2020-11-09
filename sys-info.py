@@ -97,7 +97,6 @@ if __name__ == '__main__':
     try:
         print("STARTING\n")
         main()
-        #print(data, end="\n\n")
         save_csv(data)
         print("FINISHED\n")
     except KeyboardInterrupt:
