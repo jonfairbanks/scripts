@@ -1,0 +1,7 @@
+Hostname,IP Address,Timestamp (PT),Command,Output
+192.168.1.2,192.168.1.2,2020-11-09 11:24:30.451683,( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1,Error: Authentication failed.,
+192.168.1.3,192.168.1.3,2020-11-09 11:24:33.455334,( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1,Error: timed out,
+192.168.1.4,192.168.1.4,2020-11-09 11:24:34.050090,( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1,Ubuntu 18.04.4 LTS,
+192.168.1.5,192.168.1.5,2020-11-09 11:24:34.423506,( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1,Ubuntu 16.04.7 LTS,
+192.168.1.6,192.168.1.6,2020-11-09 11:24:34.783289,( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1,Ubuntu 16.04.6 LTS,
+192.168.1.7,192.168.1.7,2020-11-09 11:24:37.788630,( lsb_release -ds || cat /etc/*release || uname -om ) 2>/dev/null | head -n1,Error: timed out,
