@@ -2,7 +2,7 @@
 #
 # Req: Python 3.x
 #
-# Usage: `python3 rename_images.py`
+# Usage: `python3 rename-files.py`
   
 import os, sys
 import readline
@@ -15,7 +15,7 @@ def main():
     cwd = os.getcwd()
     indir = input("Directory to Rename (" + cwd + "): ")
     outdir = input("Output Directory (" + cwd + "): ")
-    name = input("What should these images be named? (auto): ")
+    name = input("What should these files be named? (auto): ")
 
     if (indir == ""):
         indir = cwd
@@ -27,12 +27,12 @@ def main():
     print("Input Directory: " + indir)
     print("Output Directory: " + outdir)
     if (name == ""):
-        print("\n** Images will be sequentially renamed **")
+        print("\n** Files will be sequentially renamed **")
     else:
-        print("Image Names: " + name + "-x.ext")
+        print("File Names: " + name + "-x.ext")
 
     filecount = sum(len(files) for _, _, files in os.walk(indir))
-    if not input("\nAre you sure you want to rename " + str(filecount) + " images? (y/n): ").lower().strip()[:1] == "y": sys.exit(1)
+    if not input("\nAre you sure you want to rename " + str(filecount) + " files? (y/n): ").lower().strip()[:1] == "y": sys.exit(1)
 
     i = 1
 
