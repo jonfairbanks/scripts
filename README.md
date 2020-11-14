@@ -1,4 +1,4 @@
-# Linux Scripts
+# Scripts
 
 #### See respective folder for more details:
 
