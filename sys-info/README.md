@@ -1,6 +1,6 @@
 ### Sys-Info
 
-Ansible like script to run a command on multiple systems and gather outouot in CSV
+Ansible like script to run a command on multiple systems and gather output in CSV
 
 #### Setup
 
@@ -12,3 +12,6 @@ Ansible like script to run a command on multiple systems and gather outouot in C
 #### Output
 
 ![img](sys-info.png)
+
+#### To Do
+- [] Enable parallel runs
