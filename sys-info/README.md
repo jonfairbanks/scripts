@@ -14,4 +14,4 @@ Ansible like script to run a command on multiple systems and gather output in CS
 ![img](sys-info.png)
 
 #### To Do
-- [] Enable parallel runs
+- [ ] Enable parallel runs
